@@ -1,25 +1,25 @@
 package org.example;
 
-import org.example.DAO.EventoDAO;
-import org.example.DAO.LocationDAO;
-import org.example.DAO.PartecipazioneDAO;
-import org.example.DAO.PersonaDAO;
+import net.bytebuddy.asm.Advice;
+import org.example.DAO.*;
 import org.example.entities.*;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static java.nio.file.Files.find;
+import static org.example.DAO.EventoDAO.getConcertiPerGenere;
+import static org.example.entities.genere.ROCK;
 
 public class Main
 {
     private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("esercizio9");
     private static EntityManager em = emf.createEntityManager();
+
+
     public static void main( String[] args ) {
 
         //CREO ELEMENTIDAO
@@ -27,15 +27,9 @@ public class Main
         PersonaDAO personaDao = new PersonaDAO(em);
         LocationDAO locationDao = new LocationDAO(em);
         PartecipazioneDAO partecipazioneDao = new PartecipazioneDAO(em);
+        ConcertoDAO concerto = new ConcertoDAO(em);
 
 
-        //LISTE PARTECIPAZIONI
-        List<Partecipazione> partecipazioni = new ArrayList<Partecipazione>();
-        List<Partecipazione> partecipazioni2 = new ArrayList<Partecipazione>();
-
-        //LISTE EVENTI
-        List<Evento> eventi = new ArrayList<Evento>();
-        List<Evento> eventi2 = new ArrayList<Evento>();
 
         //ELENCO DELLE LOCATION
         Location location1 = new Location("Arena i Tre Martiri", "Rimini");
@@ -74,38 +68,67 @@ public class Main
         Partecipazione partecipazione6 = new Partecipazione(persona5,evento5,statoPartecipazione.DA_CONFERMARE);
         Partecipazione partecipazione7 = new Partecipazione(persona3,evento1,statoPartecipazione.CONFERMATA);
 
+        //ELENCO CONCERTI
+        Concerto c1 = new Concerto("The Rolling Stones",LocalDate.of(2025,02,22),"Apertura porte h.21.00",tipoEvento.PUBBLICO,400,location5, ROCK,true);
+        Concerto c2 = new Concerto("Blakc Eyed Peas",LocalDate.of(2025,6,28),"Apertura evento dalle 16.00",tipoEvento.PUBBLICO,600,location1,genere.POP,false);
+        Concerto c3 = new Concerto("Il canto dei cigni",LocalDate.of(2025,9,11),"Apertura cancelli h.21.00",tipoEvento.PUBBLICO,100,location2,genere.CLASSICO,true);
+
+        //ELENCO PARTITE
+        PartitaDiCalcio p1 = new PartitaDiCalcio("Juve-Milan",LocalDate.of(2025,3,13),"Apertura cancelli h.14.00",tipoEvento.PUBBLICO,500,location1,"Juventus","Milan","Juventus",3,3);
+        PartitaDiCalcio p2 = new PartitaDiCalcio("Barcelona-Madrid",LocalDate.of(2024,9,10),"Apertura cancelli h.15.00",tipoEvento.PUBBLICO,400,location1,"Barcelona","Madrid","Madrid",1,3);
+        PartitaDiCalcio p3 = new PartitaDiCalcio("Roma-Lazio", LocalDate.of(2024,8,3),"Costo biglietto 50 euro a persona",tipoEvento.PUBBLICO,300,location1,"Roma","Lazio","Lazio",0,4);
+        PartitaDiCalcio p4 = new PartitaDiCalcio("Inter-Argentina", LocalDate.of(2025,12,10),"Costo biglietto 60 euro a persona",tipoEvento.PUBBLICO,600,location1,"Milan","Argentina","Argentina",2,3);
 
 
 
-         //COMANDI PER SALVARE, RIMUOVERE O CERCARE NEL DATABASE:
-         /*personaDao.save_persona(persona1);
-         personaDao.save_persona(persona2);
-         personaDao.save_persona(persona3);
-         personaDao.save_persona(persona4);
-         personaDao.save_persona(persona5);
-         personaDao.save_persona(persona6);
-         personaDao.save_persona(persona7);
-         personaDao.save_persona(persona8);*/
-
-        /*locationDao.save_location(location1);
+        //COMANDI PER SALVARE, RIMUOVERE O CERCARE NEL DATABASE:
+       /* locationDao.save_location(location1);
         locationDao.save_location(location2);
-        locationDao.save_location(location4);
         locationDao.save_location(location5);
-        locationDao.save_location(location6);*/
+        locationDao.save_location(location4);
+        locationDao.save_location(location6);
 
-       /* partecipazioneDao.save_partecipazione(partecipazione1);
+        personaDao.save_persona(persona1);
+        personaDao.save_persona(persona2);
+        personaDao.save_persona(persona3);
+        personaDao.save_persona(persona4);
+        personaDao.save_persona(persona5);
+        personaDao.save_persona(persona6);
+        personaDao.save_persona(persona7);
+        personaDao.save_persona(persona8);
+
+        eventoDao.save(evento1);
+        eventoDao.save(evento2);
+        eventoDao.save(evento3);
+        eventoDao.save(evento4);
+        eventoDao.save(evento5);
+        eventoDao.save(evento6);
+        eventoDao.save(evento7);
+
+        partecipazioneDao.save_partecipazione(partecipazione1);
         partecipazioneDao.save_partecipazione(partecipazione2);
         partecipazioneDao.save_partecipazione(partecipazione3);
         partecipazioneDao.save_partecipazione(partecipazione4);
-        partecipazioneDao.save_partecipazione(partecipazone5);
         partecipazioneDao.save_partecipazione(partecipazione6);
-        partecipazioneDao.save_partecipazione(partecipazione7);*/
+        partecipazioneDao.save_partecipazione(partecipazione7);
+
+        ConcertoDAO.save_concerto(c1);
+        ConcertoDAO.save_concerto(c2);
+        ConcertoDAO.save_concerto(c3); */
+
+        EventoDAO.save(p1);
+        EventoDAO.save(p2);
+        EventoDAO.save(p3);
+        EventoDAO.save(p4);
 
 
 
-       eventoDao.remove(evento2);
-       personaDao.remove_persona(persona1);
-        // eventoDao.save(evento1);
+        List<Concerto> concerti = EventoDAO.getConcertiInStreaming();
+        concerti.forEach(c->System.out.println(c));
+
+        List<Concerto> concertiRock = getConcertiPerGenere(genere.valueOf("ROCK"));
+        concertiRock.forEach(c->System.out.println(c));
+
 
 
     }

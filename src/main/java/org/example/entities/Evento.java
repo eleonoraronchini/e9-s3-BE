@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "evento") //mettila sempre al plurale d'ora in poi!!
+@Table(name = "eventi")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+
 public class Evento {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) //come il SERIAL in PostgreSQL
+    @GeneratedValue //come il SERIAL in PostgreSQL
     private Long id;
 
     @Column(nullable = false)
@@ -36,9 +38,9 @@ public class Evento {
     @JoinColumn(name = "locazione_evento")
     private Location location;
 
-    public Evento(String titolo, LocalDate localDate, String s, org.example.entities.tipoEvento pubblico, int i) {
+    public Evento() {
 
-    }
+    };
 
     public Evento(String titolo, LocalDate dataEvento, String descrizione, org.example.entities.tipoEvento tipoEvento, int numeroMassimoPartecipanti, Location location) {
         this.titolo = titolo;

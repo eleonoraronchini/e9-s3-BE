@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "lista_partecipazioni")
 public class Partecipazione {
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long ID;
 
     @ManyToOne (cascade = CascadeType.ALL)

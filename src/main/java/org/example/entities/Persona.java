@@ -6,12 +6,13 @@ import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table (name = "partecipanti")
 public class Persona {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private long ID;
 
     @Column (nullable = false)
@@ -31,6 +32,9 @@ public class Persona {
 
     @OneToMany(mappedBy = "persona", cascade= CascadeType.ALL)
     private List<Partecipazione> persona;
+
+    @ManyToMany
+    private Set<GaraDiAtletica> gareDiAtletica;
 
     public Persona() {
     }

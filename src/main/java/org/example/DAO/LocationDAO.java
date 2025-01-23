@@ -1,8 +1,7 @@
 package org.example.DAO;
 
 import org.example.entities.Location;
-import org.example.entities.Partecipazione;
-import org.example.entities.Persona;
+
 
 import javax.persistence.EntityManager;
 
